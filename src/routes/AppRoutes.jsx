@@ -11,6 +11,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Cart from "../pages/Cart";
 import Profile from "../pages/Profile";
+import AuthLayout from "../layouts/AuthLayout";
 
 const AppRoutes = () => {
   return (
@@ -21,8 +22,8 @@ const AppRoutes = () => {
           <Route index element={<Home />} />
           <Route path="detail/:id" element={<Detail />} />
           <Route path="search" element={<Search />} />
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
+          {/* <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} /> */}
 
           {/* Protected Routes (Bắt buộc đăng nhập mới vào được) */}
           <Route element={<ProtectedRoute />}>
@@ -30,6 +31,11 @@ const AppRoutes = () => {
             <Route path="profile" element={<Profile />} />
           </Route>
         </Route>
+
+          <Route element={<AuthLayout />}>
+                <Route path="/register" element={<Register />} />
+                <Route path="/login" element={<Login />} />
+            </Route>
       </Routes>
     </BrowserRouter>
   );
