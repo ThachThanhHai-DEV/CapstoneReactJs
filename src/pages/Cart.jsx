@@ -1,9 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import useCartStore from "../store/useCartStore.js"; // Kiểm tra lại path store của bạn
+import useCartStore from "../store/useCartStore.js";
+import { useAuthStore } from "../store/useAuthStore.js"; // 1. Import thêm useAuthStore để lấy email user
 
 export default function Carts() {
-    const { cart, increaseQuantity, decreaseQuantity, removeFromCart, submitOrder } = useCartStore();
+    // 2. Lấy đúng hàm changeQuantity từ store
+    const { cart, changeQuantity, removeFromCart, submitOrder } = useCartStore();
+    const { userInfo } = useAuthStore(); // Lấy thông tin user hiện tại
+    
     const [loading, setLoading] = useState(false);
     const [notification, setNotification] = useState({ type: "", message: "" });
 
@@ -22,7 +26,10 @@ export default function Carts() {
 
         try {
             setLoading(true);
-            const res = await submitOrder();
+            // 3. Truyền email của user vào hàm submitOrder (lấy từ userInfo hoặc localStorage)
+            const userEmail = userInfo?.email || ""; 
+            const res = await submitOrder(userEmail);
+            
             setNotification({
                 type: "success",
                 message: res?.message || "Đặt hàng thành công!",
@@ -106,8 +113,9 @@ export default function Carts() {
                                             <td className="p-4 font-semibold text-gray-700">{item.price}$</td>
                                             <td className="p-4">
                                                 <div className="flex items-center gap-2">
+                                                    {/* 4. Sửa lại gọi changeQuantity với delta = +1 */}
                                                     <button
-                                                        onClick={() => increaseQuantity(item.id)}
+                                                        onClick={() => changeQuantity(item.id, 1)}
                                                         className="w-8 h-8 bg-[#60a5fa] hover:bg-blue-500 text-white font-bold rounded flex items-center justify-center transition-colors"
                                                     >
                                                         +
@@ -115,8 +123,9 @@ export default function Carts() {
                                                     <span className="bg-[#ededed] px-3 py-1 rounded font-semibold min-w-[32px] text-center">
                                                         {item.quantity}
                                                     </span>
+                                                    {/* 5. Sửa lại gọi changeQuantity với delta = -1 */}
                                                     <button
-                                                        onClick={() => decreaseQuantity(item.id)}
+                                                        onClick={() => changeQuantity(item.id, -1)}
                                                         className="w-8 h-8 bg-[#60a5fa] hover:bg-blue-500 text-white font-bold rounded flex items-center justify-center transition-colors"
                                                     >
                                                         -

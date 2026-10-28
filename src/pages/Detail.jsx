@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import userApi from "../services/userApi"; 
 import useCartStore from "../store/useCartStore";
 import productApi from "../services/productApi"; 
-// Import productApi
+
 export default function Detail() {
     const { id } = useParams();
     const [productDetail, setProductDetail] = useState(null);
@@ -23,7 +23,7 @@ export default function Detail() {
                 const data = res.data.content;
                 setProductDetail(data);
 
-                // Mặc định chọn size đầu tiên nếu có
+             
                 if (data?.size && data.size.length > 0) {
                     setSelectedSize(data.size[0]);
                 }
